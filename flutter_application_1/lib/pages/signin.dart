@@ -61,7 +61,7 @@ class _SigninState extends State<Signin> {
                     Text(
                       "Email",
                       style: TextStyle(
-                        color: Color(0xffb51837),
+                        color: Color(0xFFB51837),
                         fontSize: 25.0,
                         fontWeight: FontWeight.bold,
                       ),
