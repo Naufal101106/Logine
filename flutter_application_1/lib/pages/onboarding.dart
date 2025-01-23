@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/signin.dart';
+import 'package:flutter_application_1/pages/signup.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -68,18 +69,28 @@ class _Onboardingtate extends State<Onboarding> {
 
 
             const SizedBox(height: 20.0,),
-            Container(
-              padding: const EdgeInsets.only(top: 11.0, bottom: 11.0),
-              margin: const EdgeInsets.only(left:30.0, right: 30.0),
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30)),
-              child:const Center(
-                child: Text("SIGN UP", style: TextStyle(
-                  color: Colors.black, 
-                  fontSize: 24.0, 
-                  fontWeight: FontWeight.w500), ),
+            InkWell(
+              onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Signup(),
+                          ),
+                        );
+                      },
+              child: Container(
+                padding: const EdgeInsets.only(top: 11.0, bottom: 11.0),
+                margin: const EdgeInsets.only(left:30.0, right: 30.0),
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30)),
+                child:const Center(
+                  child: Text("SIGN UP", style: TextStyle(
+                    color: Colors.black, 
+                    fontSize: 24.0, 
+                    fontWeight: FontWeight.w500), ),
+                ),
               ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height/6,),

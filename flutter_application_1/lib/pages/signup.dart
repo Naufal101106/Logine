@@ -1,62 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/beranda.dart';
+import 'package:flutter_application_1/pages/onboarding.dart';
 import 'package:flutter_application_1/pages/password.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class Signin extends StatefulWidget {
-  const Signin({super.key});
+class Signup extends StatefulWidget {
+  const Signup({super.key});
 
   @override
-  State<Signin> createState() => _SigninState();
+  State<Signup> createState() => _SignupState();
 }
 
-class _SigninState extends State<Signin> {
+class _SignupState extends State<Signup> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  final SupabaseClient supabase = Supabase.instance.client;
+  final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
-  //fungsi login dengan memverifikasi username dan password di supabase
-  Future<void> _login() async {
+  Future<void> _register() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
     final username = _usernameController.text;
     final password = _passwordController.text;
 
     try {
-      final response = await supabase
-          .from('user')
-          .select('username, password')
-          .eq('username', username)
-          .maybeSingle();
+      final response = await Supabase.instance.client.auth.signUp(
+        password: password,
+        data: {'username': username},
+      );
 
-      if (response == null) {
+      if (response.user != null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Username tidak ditemukan!')),
+          SnackBar(content: Text('Registrasi berhasil!')),
         );
-        return;
-      }
-
-      if (response['password'] == password) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login berhasil!')),
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Beranda()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Password salah!')),
-        );
+        _usernameController.clear();
+        _passwordController.clear();
+      } else if (response.error != null) {
+        throw response.error!;
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Terjadi kesalahan: ${e.toString()}')),
+        SnackBar(content: Text('Registrasi gagal: ${e.toString()}')),
       );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+       body: Container(
         padding: EdgeInsets.only(top: 40.0),
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -77,7 +76,7 @@ class _SigninState extends State<Signin> {
             Padding(
               padding: const EdgeInsets.only(left: 30.0),
               child: Text(
-                "Hello\nSign in!",
+                "Hello\nSign Up!",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 40.0,
@@ -110,11 +109,20 @@ class _SigninState extends State<Signin> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    TextField(
-                      controller: _usernameController,
-                      decoration: InputDecoration(
-                        hintText: "Enter Email",
-                        prefixIcon: Icon(Icons.email_outlined),
+                    Form(
+                      key: _formKey,
+                      child: TextFormField(
+                        controller: _usernameController,
+                        decoration: InputDecoration(
+                          hintText: "Enter Email",
+                          prefixIcon: Icon(Icons.email_outlined)
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Email tidak boleh kosong';
+                          }
+                          return null;
+                        }
                       ),
                     ),
                     SizedBox(
@@ -128,42 +136,31 @@ class _SigninState extends State<Signin> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    TextField(
-                      controller: _passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        hintText: "Enter Password",
-                        prefixIcon: Icon(Icons.password),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Password(),
-                          ),
-                        );
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            "Forgot Password",
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 4, 72, 120),
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                    Form(
+                      child: TextFormField(
+                        controller: _passwordController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          hintText: "Enter Password",
+                          prefixIcon: Icon(Icons.password),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Password tidak boleh kosong';
+                          } else if (value.length < 6) {
+                            return 'Password harus minimal 6 karakter';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     SizedBox(
-                      height: 70.0,
+                      height: (70.0),
                     ),
-                    ElevatedButton(
-                      onPressed: _login,
+                    _isLoading
+                  ? CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: _register,
                       child: Container(
                         height: 60,
                         decoration: BoxDecoration(
@@ -181,7 +178,7 @@ class _SigninState extends State<Signin> {
                         width: MediaQuery.of(context).size.width,
                         child: Center(
                           child: Text(
-                            "SIGN IN",
+                            "SIGN UP",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24,
@@ -200,4 +197,8 @@ class _SigninState extends State<Signin> {
       ),
     );
   }
+}
+
+extension on AuthResponse {
+  get error => null;
 }
