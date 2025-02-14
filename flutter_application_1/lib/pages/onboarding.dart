@@ -36,18 +36,18 @@ class _Onboardingtate extends State<Onboarding> {
 
             const SizedBox(height: 40.0,),
            Container(
-            padding: const EdgeInsets.symmetric(vertical: 20.0), // Padding luar
-            margin: const EdgeInsets.symmetric(horizontal: 30.0), // Margin luar
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            margin: const EdgeInsets.symmetric(horizontal: 30.0),
             width: MediaQuery.of(context).size.width,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16.0), // Padding dalam tombol
-                backgroundColor: Colors.transparent, // Latar belakang transparan
-                foregroundColor: Colors.white, // Warna teks
-                shadowColor: Colors.transparent, // Menghilangkan bayangan tombol
-                side: const BorderSide(color: Colors.white, width: 2), // Border putih
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                backgroundColor: Colors.transparent,
+                foregroundColor: Colors.white,
+                shadowColor: Colors.transparent,
+                side: const BorderSide(color: Colors.white, width: 2),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30), // Membuat border melengkung
+                  borderRadius: BorderRadius.circular(30),
                 ),
                 
               ),

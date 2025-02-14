@@ -53,7 +53,7 @@ class _InsertState extends State<Insert> {
               'Produk berhasil ditambahkan',
               style: TextStyle(color: Colors.white),
             ),
-            backgroundColor: Colors.green,
+            backgroundColor: Color.fromARGB(255, 168, 2, 29),
           ),
         );
 

@@ -17,6 +17,34 @@ class _BerandaState extends State<Beranda> {
       home: DefaultTabController(
         length: 4,
         child: Scaffold(
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: () async {
+            // Navigate to the insert page and await the result
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Insert()),
+            );
+
+            // If the result is true, refresh the book list
+            if (result == true) {
+              Produk();
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xff661c3a), // Background color
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12), // Rounded corners
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [Icon(Icons.add, color: Colors.white)],
+          ),
+            ),
+          ),
           appBar: AppBar(
             flexibleSpace: Container(
               padding: EdgeInsets.only(top: 40.0),
@@ -49,10 +77,10 @@ class _BerandaState extends State<Beranda> {
               labelColor: Colors.white,
               unselectedLabelColor: Colors.white60,
               tabs: [
-                Tab(icon: Icon(Icons.drafts), text: 'Detail Penjualan'),
-                Tab(icon: Icon(Icons.person_2_sharp), text: 'Customer'),
                 Tab(icon: Icon(Icons.shopping_bag), text: 'Produk'),
+                Tab(icon: Icon(Icons.drafts), text: 'Detail Penjualan'),
                 Tab(icon: Icon(Icons.shopping_cart), text: 'Penjualan'),
+                Tab(icon: Icon(Icons.person_2_sharp), text: 'Customer'),
               ],
             ),
           ),
@@ -109,9 +137,6 @@ class _BerandaState extends State<Beranda> {
             children: [
               TabBarView(
                 children: [
-                  Center(child: Text('Detail Penjualan Content')),
-                  // PelangganTab(),
-                  Insert(),
                   Produk(),
                   Center(child: Text('Penjualan Content')),
                 ],
